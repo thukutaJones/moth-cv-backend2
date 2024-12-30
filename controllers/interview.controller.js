@@ -1,5 +1,7 @@
 const Interview = require("../models/interview.model");
 const axios = require("axios");
+const FormData = require("form-data");
+const { default: mongoose } = require("mongoose");
 
 exports.initiateInterview = async (req, res) => {
   try {
@@ -26,10 +28,9 @@ exports.initiateInterview = async (req, res) => {
         },
       }
     );
-    console.log(response.data.choices[0].message.content);
 
     const newDoc = await Interview.create({
-      interviwee: userId,
+      interviewee: userId,
       conversation: [
         {
           role: "user",
@@ -42,11 +43,10 @@ exports.initiateInterview = async (req, res) => {
       ],
     });
     res.status(200).json({
-      interviewId: newDoc,
+      interviewId: newDoc?._id,
       message: response.data.choices[0].message.content,
     });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ status: "failed", message: error.message });
   }
 };
@@ -62,49 +62,67 @@ exports.proceedInterview = async (req, res) => {
     const originalName = req.file.originalname;
     const mimeType = req.file.mimetype;
 
-    console.log()
-
     const formData = new FormData();
-    formData.append('file', fileBuffer, originalName);
+    formData.append("file", fileBuffer, {
+      filename: originalName,
+      contentType: mimeType,
+    });
     formData.append("model", "whisper-1");
-    const response = await axios.post(
+
+    const userPrompt = await axios.post(
       "https://api.openai.com/v1/audio/transcriptions",
       formData,
       {
         headers: {
-          Authorization: `Bearer ${OPENAI_API_KEY}`,
+          Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
           ...formData.getHeaders(),
         },
       }
     );
 
-    const conversationHistory = await Interview.findOne({
-      interviwee: userId,
+    let conversationHistory = await Interview.findOne({
       _id: interviewId,
+      interviewee: userId,
     });
 
-    const newInterview = await Interview.findOneAndUpdate(
-      { interviwee: userId, _id: interviewId },
+    conversationHistory = [
+      ...conversationHistory?.conversation,
+      { role: "user", content: userPrompt?.data?.text },
+    ];
+
+    const data = {
+      model: "gpt-4o-mini",
+      messages: conversationHistory,
+      temperature: 0.7,
+    };
+
+    const response = await axios.post(
+      "https://api.openai.com/v1/chat/completions",
+      data,
       {
-        $push: {
-          conversation: [
-            ...conversationHistory,
-            {
-              role: "system",
-              content: response.data.choices[0].message.content,
-            },
-          ],
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
         },
+      }
+    );
+    const newInterview = await Interview.findOneAndUpdate(
+      { interviewee: userId, _id: interviewId },
+      {
+        conversation: [
+          ...conversationHistory,
+          {
+            role: "system",
+            content: response.data.choices[0].message.content,
+          },
+        ],
       },
       { new: true, upsert: true }
     );
-    console.log(newInterview);
     let conversation = newInterview?.conversation;
-    console.log(conversation);
     conversation?.shift();
     res.status(200).json({ message: conversation });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ status: "failed", message: error.message });
   }
 };
