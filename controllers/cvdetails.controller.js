@@ -1,0 +1,1 @@
+const CVDetails = require('../models/cvDetails.model')
