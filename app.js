@@ -26,9 +26,11 @@ app.use(express.json());
 const userRouter = require("./routes/user.routes");
 const interviewRouter = require("./routes/interview.route");
 const authRouter = require("./routes/auth.route");
+const cvDetailsRouter = require("./routes/cvDetails.route");
 
 app.use("/api/me", userRouter);
 app.use("/api/interview", interviewRouter);
 app.use("/api/auth", authRouter);
+app.use("/api/cv-details", cvDetailsRouter);
 
 module.exports = app;

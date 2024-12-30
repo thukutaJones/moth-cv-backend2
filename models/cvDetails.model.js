@@ -6,25 +6,26 @@ const CVDetailsSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
-    personalDetails: [
-      {
-        fullName: {
-          type: String,
-        },
-        email: {
-          String,
-        },
-        address: {
-          type: String,
-        },
-        nationality: {
-          String,
-        },
-        phone: {
-          phone,
-        },
+    personalDetails: {
+      fullName: {
+        type: String,
       },
-    ],
+      email: {
+        String,
+      },
+      address: {
+        type: String,
+      },
+      nationality: {
+        String,
+      },
+      phone: {
+        String,
+      },
+      profilePhoto: {
+        type: String,
+      },
+    },
     workExperience: [
       {
         jobTitle: {
