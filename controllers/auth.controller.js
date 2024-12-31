@@ -14,7 +14,8 @@ exports.googleSignIn = passport.authenticate("google", {
 exports.googleAuthCallback = (req, res, next) => {
   passport.authenticate("google", async (err, user) => {
     if (err || !user) {
-      return res.redirect(`${process.env.FRONTEND_BASE_URL}/sign-in`);
+      // return res.redirect(`${process.env.FRONTEND_BASE_URL}/sign-in`);
+      console.log(err)
     }
 
     const token = signinToken(user._id);
