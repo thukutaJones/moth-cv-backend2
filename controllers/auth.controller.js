@@ -19,10 +19,6 @@ exports.googleAuthCallback = (req, res, next) => {
 
     const token = signinToken(user._id);
     res.cookie("moth-cv-token", token, {
-      expires:
-        new Date(Date.now() + process.env.JTW_EXPIRES_IN) *
-        (24 * 60 * 60 * 1000),
-      secure: process.env.NODE_ENV === "production",
       httpOnly: true,
     });
 
