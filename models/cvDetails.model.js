@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const CVDetailsSchema = mongoose.Schema(
+const CVDetailsSchema = new mongoose.Schema(
   {
     owner: {
       type: mongoose.Schema.Types.ObjectId,
@@ -26,7 +26,7 @@ const CVDetailsSchema = mongoose.Schema(
         type: String,
       },
     },
-    workExperience: [
+    workExperience: [ 
       {
         jobTitle: {
           type: String,

@@ -12,7 +12,7 @@ passport.use(
     async (accessToken, refreshToken, profile, done) => {
       try {
         const payload = {
-          name: profile.displayName,
+          fullName: profile.displayName,
           email: profile.emails[0].value,
           profilePhoto: profile.photos[0]?.value,
         };
@@ -25,7 +25,6 @@ passport.use(
 
         return done(null, user);
       } catch (error) {
-        console.log(error);
         return done(error, null);
       }
     }

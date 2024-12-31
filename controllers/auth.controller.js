@@ -17,7 +17,6 @@ exports.googleAuthCallback = (req, res, next) => {
       return res.redirect(`${process.env.FRONTEND_BASE_URL}/sign-in`);
     }
 
-    console.log(user);
     const token = signinToken(user._id);
     res.cookie("moth-cv-token", token, {
       expires:
