@@ -24,6 +24,7 @@ const CVDetailsSchema = new mongoose.Schema(
       },
       profilePhoto: {
         type: String,
+        default: ""
       },
     },
     workExperience: [ 

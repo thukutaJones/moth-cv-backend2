@@ -22,6 +22,7 @@ const {
   deleteReference,
   getCVDetails,
 } = require("../controllers/cvdetails.controller");
+const authenticateToken = require("../config/authenticate");
 
 const router = express.Router();
 
@@ -32,13 +33,13 @@ const multer = Multer({
   },
 });
 
-router.get("/:userId", getCVDetails);
+router.get("/:userId", authenticateToken, getCVDetails);
 router.post(
   "/personal-details/:userId",
   multer.single("image"),
   addPsersonalDetails
 );
-router.get("/personal-details/:userId", getPersonalDetails);
+router.get("/personal-details/:userId", authenticateToken, getPersonalDetails);
 router.post("/work-experience/:userId", addWorkExperience);
 router.post("/work-experience/get/description", getJobDescription);
 router.get("/work-experience/:userId", getWorkExperience);
@@ -46,20 +47,37 @@ router.delete(
   "/work-experience/:userId/:jobTitle/:company/:startDate",
   deleteWorkExperience
 );
-router.post("/education/:userId", addEducation);
+router.post("/education/:userId", authenticateToken, addEducation);
 router.get("/education/:userId", getEducation);
-router.delete("/education/:userId/:degree/:school/:startDate", deleteEducation);
-router.post("/skills/:userId", addSkill);
-router.get("/skills/:userId", getSkills);
-router.delete("/skills/:userId/:skill", deleteSkill);
-router.post("/professional-summary/:userId", addProfessionalSummary);
-router.get("/professional-summary/:userId", getProfessionalSummary);
+router.delete(
+  "/education/:userId/:degree/:school/:startDate",
+  authenticateToken,
+  deleteEducation
+);
+router.post("/skills/:userId", authenticateToken, addSkill);
+router.get("/skills/:userId", authenticateToken, getSkills);
+router.delete("/skills/:userId/:skill", authenticateToken, deleteSkill);
+router.post(
+  "/professional-summary/:userId",
+  authenticateToken,
+  addProfessionalSummary
+);
+router.get(
+  "/professional-summary/:userId",
+  authenticateToken,
+  getProfessionalSummary
+);
 router.post(
   "/professional-summary/get/professional-summary",
+  authenticateToken,
   generateProfessionalSummary
 );
-router.post("/references/:userId", addReference);
-router.get("/references/:userId", getReferences);
-router.delete("/references/:userId/:name/:company/:phone", deleteReference);
+router.post("/references/:userId", authenticateToken, addReference);
+router.get("/references/:userId", authenticateToken, getReferences);
+router.delete(
+  "/references/:userId/:name/:company/:phone",
+  authenticateToken,
+  deleteReference
+);
 
 module.exports = router;
