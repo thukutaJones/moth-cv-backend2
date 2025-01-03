@@ -15,8 +15,8 @@ const bucket = storage.bucket("moth-cv");
 exports.getCVDetails = async (req, res) => {
   try {
     const { userId } = req.params;
-    const details = await CVDetails.findOne({ owner: userId });
-    res.status(200).json({ status: "success", details });
+    const details = await CVDetails.find({ owner: userId });
+    res.status(200).json({ status: "success", details: details[0] });
   } catch (error) {
     res.status(500).json({ status: "failed" });
   }

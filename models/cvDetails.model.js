@@ -11,23 +11,23 @@ const CVDetailsSchema = new mongoose.Schema(
         type: String,
       },
       email: {
-        String,
+        type: String,
       },
       address: {
         type: String,
       },
       nationality: {
-        String,
+        type: String,
       },
       phone: {
-        String,
+        type: String,
       },
       profilePhoto: {
         type: String,
-        default: ""
+        default: "",
       },
     },
-    workExperience: [ 
+    workExperience: [
       {
         jobTitle: {
           type: String,
@@ -91,7 +91,8 @@ const CVDetailsSchema = new mongoose.Schema(
       },
     ],
   },
-  { timeStamps: true }
+  { timestamps: true }
 );
+
 
 module.exports = mongoose.model("CvDetail", CVDetailsSchema);
