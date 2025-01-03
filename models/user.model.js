@@ -15,7 +15,7 @@ const UserSchema = new mongoose.Schema(
     profilePhoto: {
       type: String,
       default:
-        "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg",
+        "https://storage.googleapis.com/moth-cv/profile-pictures/anonymous-avatar-icon-25.webp",
     },
     password: {
       type: String,
